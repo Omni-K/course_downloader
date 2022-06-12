@@ -1,16 +1,22 @@
-# This is a sample Python script.
+from pywebcopy import save_webpage
+import os
+import requests
+from bs4 import BeautifulSoup
+print(download_folder := os.path.curdir+'/downloads/')
+for n in range(1, 7+1):
+    url = f'https://chanceforchange.ru/kurs-dengi-{n}-lekciya/'
+    html = requests.request(method='GET', url=url).text
+    save_webpage(url=url,
+                 project_folder=download_folder, project_name=url.split('/')[3],
+                 bypass_robots=True, open_in_browser=False,
+                 )
+    soup = BeautifulSoup(html, "html.parser")
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+    for idx, tag in enumerate(soup.find_all('source'), start=1):
+        link = tag.get('src')
+        file = requests.get(link, stream=True)
+        if file.status_code == 200:
+            save_file = open(f'{download_folder}{n}-{idx}.mp3', 'wb')
+            save_file.write(file.content)
+            save_file.close()
 
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
