@@ -1,3 +1,5 @@
+# coding=utf-8
+"""Модуль для скачки аудио и самих страниц с сайта Психолога Александры Васильевны Алексеевой"""
 from pywebcopy import save_webpage
 import os
 import requests
@@ -19,4 +21,3 @@ for n in range(1, 7+1):
             save_file = open(f'{download_folder}{n}-{idx}.mp3', 'wb')
             save_file.write(file.content)
             save_file.close()
-
